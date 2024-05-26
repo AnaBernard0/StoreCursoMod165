@@ -1,0 +1,68 @@
+﻿@*using Microsoft.AspNetCore.Authorization*@
+@model IEnumerable<StoreCursoMod165.Models.Product>
+
+
+<h1>Products</h1>
+
+<p>
+    <a asp-action="Create">Create New Product</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Weight)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category.Name)
+            </th>
+            <th>
+                Actions
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>No Data</tr>
+        }
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => product.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => product.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => product.Weight)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => product.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => product.CategoryID)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@product.ID">Details</a>
+                    <a asp-action="Edit" asp-route-id="@product.ID">Edit</a> 
+                    <a asp-action="Delete" asp-route-id="@product.ID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
