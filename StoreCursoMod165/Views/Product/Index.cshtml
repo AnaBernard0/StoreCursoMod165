@@ -24,10 +24,7 @@
                 @Html.DisplayNameFor(model => model.Quantity)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category.Name)
+                @Html.DisplayNameFor(model => model.CategoryID)
             </th>
             <th>
                 Actions
@@ -55,7 +52,7 @@
                     @Html.DisplayFor(modelItem => product.Quantity)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => product.CategoryID)
+                    @Html.DisplayFor(modelItem => product.Category.Name)
                 </td>
                 <td>
                     <a asp-action="Details" asp-route-id="@product.ID">Details</a>

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using StoreCursoMod165.Data;
 using StoreCursoMod165.Models;
 
@@ -15,7 +17,8 @@ namespace StoreCursoMod165.Controllers
         }
         public IActionResult Index()
         {
-            IEnumerable<Product> products = _context.Products.ToList();
+            IEnumerable<Product> products = _context.Products
+                                                    .Include(p=>p.Category).ToList();
 
             return View(products);
         }
@@ -23,6 +26,7 @@ namespace StoreCursoMod165.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            this.SetUpCategoryModel();
             return View();
         }
 
@@ -33,10 +37,12 @@ namespace StoreCursoMod165.Controllers
             {
                 //Criar new category
                 _context.Products.Add(product);
+                Console.WriteLine(product.CategoryID);
+                //Console.WriteLine(product.Category.Name);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
-
+            this.SetUpCategoryModel();
             return View(product);
         }
 
@@ -59,6 +65,7 @@ namespace StoreCursoMod165.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
+            this.SetUpCategoryModel();
             return View(product);
         }
         [HttpPost]
@@ -85,6 +92,7 @@ namespace StoreCursoMod165.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
+            this.SetUpCategoryModel();
             return View(product);
         }
 
@@ -103,6 +111,12 @@ namespace StoreCursoMod165.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(product);
+        }
+
+        private void SetUpCategoryModel()
+        {
+            ViewBag.Category = new SelectList(_context.Category, "ID", "Name");
+            
         }
     }
 }
