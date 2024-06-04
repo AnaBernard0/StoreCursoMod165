@@ -14,5 +14,7 @@ namespace StoreCursoMod165.Data
         public DbSet<Category> Category { get; set; } = default!;
         public DbSet<Product> Products { get; set; } = default!;
         public DbSet<Customer> Customers { get; set; } = default!;
+        public DbSet<Order> Orders { get; set; } = default!;
+        public DbSet<Status> OrderStatus { get; set; } = default!;
     }
 }

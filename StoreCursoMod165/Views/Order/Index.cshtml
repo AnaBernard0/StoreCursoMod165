@@ -1,0 +1,89 @@
+﻿@*using Microsoft.AspNetCore.Authorization*@
+@model IEnumerable<StoreCursoMod165.Models.Order>
+
+
+<h1>Products</h1>
+
+<p>
+    <a asp-action="Create">Create New Order</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Number)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Time)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomerID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Informations)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StatusID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsPaid)
+            </th>
+            <th>
+                Actions
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>No Data</tr>
+        }
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => order.Number)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => order.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => order.Time)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => order.Customer.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => order.Product.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => order.Informations)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => order.TotalValue)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => order.Status.NameofStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => order.IsPaid)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@order.ID">Details</a>
+                    <a asp-action="Edit" asp-route-id="@order.ID">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@order.ID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
