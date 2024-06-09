@@ -2,88 +2,42 @@
 @model IEnumerable<StoreCursoMod165.Models.Order>
 
 
-<h1>Products</h1>
+<h1>Orders</h1>
 
 <p>
     <a asp-action="Create">Create New Order</a>
 </p>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Number)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Date)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Time)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CustomerID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Informations)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TotalValue)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StatusID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsPaid)
-            </th>
-            <th>
-                Actions
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (!Model.Any())
+@(
+Html
+        .Grid(Model)
+        .Build(columns =>
         {
-            <tr>No Data</tr>
-        }
-        @foreach (var order in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => order.Number)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => order.Date)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => order.Time)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => order.Customer.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => order.Product.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => order.Informations)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => order.TotalValue)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => order.Status.NameofStatus)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => order.IsPaid)
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@order.ID">Details</a>
-                    <a asp-action="Edit" asp-route-id="@order.ID">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@order.ID">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+            columns.Add(order => order.Number).Titled("Order º");
+            columns.Add(order => order.Date).Titled("Date").Formatted("{0:dd-MMM-yyyy}")
+                                                        .Filterable(GridFilterType.Double);
+            columns.Add(order => order.Time).Titled("Time").Formatted("{0:t}");
+            columns.Add(order => order.Customer.Name).Titled("Customer");
+            columns.Add(order => order.Product.Description).Titled("Product");
+            columns.Add(order => order.Informations).Titled("Informations");
+            columns.Add(order => order.Quantity).Titled("Quantity");
+            columns.Add(order => order.TotalValue).Titled("Total Value");
+            columns.Add(order => order.Status.NameofStatus).Titled("Status");
+            columns.Add(order => order.IsPaid).Titled("IsPaid")
+.RenderedAs(order => (order.IsPaid == true ? "Yes":"No"))
+                  .UsingFilterOptions(new[]
+                  {
+                      new SelectListItem{Value="true",Text="Yes"},
+                      new SelectListItem{Value="false",Text="No"}
+
+                  });
+            columns.Add(order =>
+              Html.ActionLink("Edit", "Edit", new { id = order.ID }, new { @class = "btn btn-primary" }));
+            columns.Add(order =>
+Html.ActionLink("Delete", "Delete", new { id = order.ID }, new { @class = "btn btn-primary" }));
+
+        })
+        .Filterable()
+        .Sortable()
+
+)

@@ -58,6 +58,10 @@ namespace StoreCursoMod165.Models
         public int StatusID { get; set; }
 
 
+        [Display(Name = "Quantity")]
+        [Required]
+        public int Quantity { get; set; }
+
         [Required]
         [Display(Name = "IsPaid")]
         public bool IsPaid { get; set; } 
