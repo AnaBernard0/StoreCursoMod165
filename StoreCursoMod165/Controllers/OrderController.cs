@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StoreCursoMod165.Data;
@@ -17,8 +18,8 @@ namespace StoreCursoMod165.Controllers
         public IActionResult Index()
         {
             IEnumerable<Order> orders = _context.Orders
-                                                    .Include(o=>o.Customer)
-                                                    .Include(o=>o.Product)
+                                                    .Include(o => o.Product)
+                                                    .Include(o => o.Customer)
                                                     .Include(o=>o.Status)
                                                     .ToList();
 
@@ -39,8 +40,6 @@ namespace StoreCursoMod165.Controllers
             {
                 //Criar new category
                 _context.Orders.Add(order);
-               // Console.WriteLine(order.CategoryID);
-                //Console.WriteLine(product.Category.Name);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -62,17 +61,25 @@ namespace StoreCursoMod165.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            Order? order = _context.Orders.Find(id);
+            Order? order = _context.Orders
+                                           .Include(o => o.Product)
+                                           .Include(o => o.Customer)
+                                           .Include(o => o.Status)
+                                           .Where(o => o.ID == id)
+                                           .Single();
+
+
             if (order == null)
             {
                 return RedirectToAction(nameof(Index));
             }
-            this.SetUpOrderModel();
+            this.SetUpOrderModel();            
             return View(order);
         }
         [HttpPost]
         public IActionResult Edit(Order order)
         {
+           
             if (ModelState.IsValid)
             {
                 _context.Orders.Update(order);
@@ -117,8 +124,8 @@ namespace StoreCursoMod165.Controllers
 
         private void SetUpOrderModel()
         {
-            ViewBag.CustomerList = new SelectList(_context.Customers, "ID", "Name");
             ViewBag.ProductList = new SelectList(_context.Products, "ID", "Description");
+            ViewBag.CustomerList = new SelectList(_context.Customers, "ID", "Name");
             ViewBag.Status = new SelectList(_context.OrderStatus, "ID", "NameofStatus");
 
         }

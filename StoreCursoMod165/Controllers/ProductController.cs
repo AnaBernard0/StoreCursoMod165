@@ -37,7 +37,7 @@ namespace StoreCursoMod165.Controllers
             {
                 //Criar new category
                 _context.Products.Add(product);
-                Console.WriteLine(product.CategoryID);
+                //Console.WriteLine(product.CategoryID);
                 //Console.WriteLine(product.Category.Name);
                 _context.SaveChanges();
                 return RedirectToAction("Index");

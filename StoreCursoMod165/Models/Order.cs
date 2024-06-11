@@ -60,7 +60,7 @@ namespace StoreCursoMod165.Models
 
         [Display(Name = "Quantity")]
         [Required]
-        public int Quantity { get; set; }
+        public string Quantity { get; set; }
 
         [Required]
         [Display(Name = "IsPaid")]
