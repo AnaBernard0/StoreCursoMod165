@@ -5,7 +5,11 @@
 <h1>Orders</h1>
 
 <p>
-    <a asp-action="Create">Create New Order</a>
+    <a asp-action="Create" class="btn btn-primary">Create New Order</a>
+</p>
+
+<p>
+    <a asp-action="Ordered" class="btn btn-primary">Ordered</a>
 </p>
 
 @(
@@ -35,9 +39,16 @@ Html
               Html.ActionLink("Edit", "Edit", new { id = order.ID }, new { @class = "btn btn-primary" }));
             columns.Add(order =>
 Html.ActionLink("Delete", "Delete", new { id = order.ID }, new { @class = "btn btn-primary" }));
+            columns.Add(order =>
+              Html.ActionLink("See All Orders", "SeeOrders", new { id = order.CustomerID }, new { @class = "btn btn-primary" }));
 
         })
         .Filterable()
         .Sortable()
 
+
+
+
 )
+
+         

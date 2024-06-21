@@ -17,11 +17,18 @@ namespace StoreCursoMod165.Controllers
         }
         public IActionResult Index()
         {
+            IEnumerable<Product> products = _context.Products
+                                                    .Include(p => p.Category).ToList();
+
             IEnumerable<Order> orders = _context.Orders
                                                     .Include(o => o.Product)
                                                     .Include(o => o.Customer)
                                                     .Include(o=>o.Status)
                                                     .ToList();
+            foreach(var order in orders)
+            {
+                order.TotalValue = Decimal.Parse(order.Quantity) * (order.Product.Price);
+            }
 
             return View(orders);
         }
@@ -38,12 +45,19 @@ namespace StoreCursoMod165.Controllers
         {
             if (ModelState.IsValid)
             {
+                this.SetUpOrderModel();
+                
+                
                 //Criar new category
+                
                 _context.Orders.Add(order);
                 _context.SaveChanges();
+               
+
                 return RedirectToAction("Index");
             }
             this.SetUpOrderModel();
+            //order.TotalValue = Decimal.Parse(order.Quantity) * (order.Product.Price);
             return View(order);
         }
 
@@ -76,6 +90,37 @@ namespace StoreCursoMod165.Controllers
             this.SetUpOrderModel();            
             return View(order);
         }
+
+        [HttpGet]
+        public IActionResult SeeOrders(Customer customer)
+        {
+            if (customer == null)
+                return NotFound();
+            var seeOrdersbyCustomer = _context.Orders
+                                               .Include(o=>o.Product)
+                                               .Include(o => o.Status)
+                                               .Include(o=>o.Customer)
+                                               .Where(o=>o.CustomerID == customer.ID)
+                                               .ToList();
+            this.SetUpOrderModel();
+            var name = _context.Orders.Include(o => o.Customer).Where(o => o.CustomerID == customer.ID).FirstOrDefault();
+            ViewBag.Name = name.Customer.Name;
+
+            decimal totalPago = 0;
+            decimal totalPorPagar = 0;
+            foreach (var order in seeOrdersbyCustomer)
+            {
+                if(order.IsPaid)
+                    totalPago=totalPago+order.TotalValue;
+                totalPorPagar=totalPorPagar+order.TotalValue;
+            }
+
+            ViewBag.TotalPaid=totalPago;
+            ViewBag.TotalPor=totalPorPagar;
+            ViewBag.Soma=totalPago-totalPorPagar;
+            return View(seeOrdersbyCustomer);
+        }
+
         [HttpPost]
         public IActionResult Edit(Order order)
         {
@@ -120,6 +165,20 @@ namespace StoreCursoMod165.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(order);
+        }
+
+        [HttpGet]
+        public IActionResult Ordered()
+        {
+            var seeOrdered = _context.Orders
+                                               .Include(o => o.Product)
+                                               .Include(o => o.Status)
+                                               .Include(o => o.Customer)
+                                               .Where(o=>o.StatusID == 1)
+                                               .ToList();
+            this.SetUpOrderModel();
+          
+            return View(seeOrdered);
         }
 
         private void SetUpOrderModel()

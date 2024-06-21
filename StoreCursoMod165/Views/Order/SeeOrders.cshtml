@@ -1,10 +1,24 @@
-﻿@*using Microsoft.AspNetCore.Authorization*@
-@model IEnumerable<StoreCursoMod165.Models.Order>
-<h1>Ordered</h1>
+﻿@model IEnumerable<StoreCursoMod165.Models.Order>
+
+
+<h1>Orders by Customer</h1>
 
 <p>
-    <a asp-action="Index" class="btn btn-primary">Back to All Orders</a>
+    <a asp-action="Create">Create New Order</a>
 </p>
+
+<thead>
+   <tr>
+     <th>
+         Customer Name:
+     </th>
+   </tr>
+</thead>
+
+<p><strong>@ViewBag.Name</strong></p>
+
+    
+<h1></h1>
 @(
 Html
         .Grid(Model)
@@ -14,29 +28,53 @@ Html
             columns.Add(order => order.Date).Titled("Date").Formatted("{0:dd-MMM-yyyy}")
                                                         .Filterable(GridFilterType.Double);
             columns.Add(order => order.Time).Titled("Time").Formatted("{0:t}");
-            columns.Add(order => order.Customer.Name).Titled("Customer");
             columns.Add(order => order.Product.Description).Titled("Product");
             columns.Add(order => order.Informations).Titled("Informations");
             columns.Add(order => order.Quantity).Titled("Quantity");
             columns.Add(order => order.TotalValue).Titled("Total Value");
             columns.Add(order => order.Status.NameofStatus).Titled("Status");
             columns.Add(order => order.IsPaid).Titled("IsPaid")
-.RenderedAs(order => (order.IsPaid == true ? "Yes":"No"))
+.RenderedAs(order => (order.IsPaid == true ? "Yes" : "No"))
                   .UsingFilterOptions(new[]
                   {
                       new SelectListItem{Value="true",Text="Yes"},
                       new SelectListItem{Value="false",Text="No"}
 
                   });
-            columns.Add(order =>
-              Html.ActionLink("Edit", "Edit", new { id = order.ID }, new { @class = "btn btn-primary" }));
-            columns.Add(order =>
-Html.ActionLink("Delete", "Delete", new { id = order.ID }, new { @class = "btn btn-primary" }));
-            columns.Add(order =>
-              Html.ActionLink("See All Orders", "SeeOrders", new { id = order.CustomerID }, new { @class = "btn btn-primary" }));
 
         })
         .Filterable()
         .Sortable()
+        .Pageable()
 
-                  )
+)
+
+<thead>
+    <tr>
+        <th>
+            Total Paid:
+        </th>
+    </tr>
+</thead>
+
+<p><strong>@ViewBag.TotalPaid €</strong></p>
+
+<thead>
+    <tr>
+        <th>
+            Total UnPaid:
+        </th>
+    </tr>
+</thead>
+
+<p><strong>@ViewBag.TotalPor € </strong></p>
+
+<thead>
+    <tr>
+        <th>
+            Current Balance:
+        </th>
+    </tr>
+</thead>
+
+<p><strong>@ViewBag.Soma € </strong></p>
