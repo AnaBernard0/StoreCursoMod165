@@ -1,0 +1,50 @@
+﻿@model IEnumerable<StoreCursoMod165.Models.Order>
+
+
+<h1>Orders Per Pay</h1>
+
+<p>
+    <a asp-action="Index" class="btn btn-primary">Back to All Orders</a>
+</p>
+
+    
+<h1></h1>
+@(
+Html
+        .Grid(Model)
+        .Build(columns =>
+        {
+            columns.Add(order => order.Number).Titled("Order º");
+            columns.Add(order => order.Date).Titled("Date").Formatted("{0:dd-MMM-yyyy}")
+                                                        .Filterable(GridFilterType.Double);
+            columns.Add(order => order.Time).Titled("Time").Formatted("{0:t}");
+            columns.Add(order => order.Product.Description).Titled("Product");
+            columns.Add(order => order.Informations).Titled("Informations");
+            columns.Add(order => order.Quantity).Titled("Quantity");
+            columns.Add(order => order.TotalValue).Titled("Total Value");
+            columns.Add(order => order.Status.NameofStatus).Titled("Status");
+            columns.Add(order => order.IsPaid).Titled("IsPaid")
+.RenderedAs(order => (order.IsPaid == true ? "Yes" : "No"))
+                  .UsingFilterOptions(new[]
+                  {
+                      new SelectListItem{Value="true",Text="Yes"},
+                      new SelectListItem{Value="false",Text="No"}
+
+                  });
+
+        })
+        .Filterable()
+        .Sortable()
+        .Pageable()
+
+)
+
+<thead>
+    <tr>
+        <th>
+            Total UnPaid:
+        </th>
+    </tr>
+</thead>
+
+<p><strong>@ViewBag.TotalPor € </strong></p>

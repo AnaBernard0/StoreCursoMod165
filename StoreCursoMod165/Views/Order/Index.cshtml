@@ -2,20 +2,20 @@
 @model IEnumerable<StoreCursoMod165.Models.Order>
 
 
-<h1>Orders</h1>
+<h1>@SharedLocalizer["Orders"]</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">Create New Order</a>
+    <a asp-action="Create">@SharedLocalizer["Create New Order"]</a>
 </p>
 
 <p>
-    <a asp-action="Ordered" class="btn btn-primary">Ordered</a>
+    <a asp-action="Ordered" class="btn btn-primary">@SharedLocalizer["Ordered"]</a>
 
-    <a asp-action="InProgress" class="btn btn-primary">In Progress</a>
+    <a asp-action="InProgress" class="btn btn-primary">@SharedLocalizer["In Progress"]</a>
 
-    <a asp-action="Processed" class="btn btn-primary">Processed</a>
+    <a asp-action="Processed" class="btn btn-primary">@SharedLocalizer["Processed"]</a>
 
-    <a asp-action="Sent" class="btn btn-primary">Sent</a>
+    <a asp-action="Sent" class="btn btn-primary">@SharedLocalizer["Sent"]</a>
 
 </p>
 
@@ -26,7 +26,7 @@ Html
         .Grid(Model)
         .Build(columns =>
         {
-            columns.Add(order => order.Number).Titled("Order º");
+            columns.Add(order => order.Number).Titled(SharedLocalizer["Order º"]);
             columns.Add(order => order.Date).Titled("Date").Formatted("{0:dd-MMM-yyyy}")
                                                         .Filterable(GridFilterType.Double);
             columns.Add(order => order.Time).Titled("Time").Formatted("{0:t}");
