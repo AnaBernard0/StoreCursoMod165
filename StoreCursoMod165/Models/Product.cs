@@ -10,10 +10,12 @@ namespace StoreCursoMod165.Models
         public int ID { get; set; }
 
         [StringLength(255)]
+        [Display(Name = "Description")]
         [Required]
         public string Description { get; set; }
 
         [DataType(DataType.Currency)]
+        [Display(Name ="Price")]
         [Range(0, 5000)]
         [Precision(18, 2)]
         [Required]

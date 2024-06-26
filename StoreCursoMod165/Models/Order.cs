@@ -46,6 +46,7 @@ namespace StoreCursoMod165.Models
         [DataType(DataType.Currency)]
         [Range(0, 5000)]
         [Precision(18, 2)]
+        [Display(Name ="Total Value")]
         [Required]
         public decimal TotalValue { get; set; }
 

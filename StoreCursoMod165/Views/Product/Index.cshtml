@@ -2,64 +2,31 @@
 @model IEnumerable<StoreCursoMod165.Models.Product>
 
 
-<h1>Products</h1>
+<h1>@SharedLocalizer["Products"]</h1>
 
 <p>
-    <a asp-action="Create">Create New Product</a>
+    <a asp-action="Create">@SharedLocalizer["Create New Product"]</a>
 </p>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Weight)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Quantity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CategoryID)
-            </th>
-            <th>
-                Actions
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (!Model.Any())
+
+@(
+Html
+        .Grid(Model)
+        .Build(columns =>
         {
-            <tr>No Data</tr>
-        }
-        @foreach (var product in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => product.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => product.Price)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => product.Weight)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => product.Quantity)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => product.Category.Name)
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@product.ID">Details</a>
-                    <a asp-action="Edit" asp-route-id="@product.ID">Edit</a> 
-                    <a asp-action="Delete" asp-route-id="@product.ID">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+            columns.Add(category => category.Description).Titled(@SharedLocalizer["Description"]);
+            columns.Add(category => category.Price).Titled(@SharedLocalizer["Price"]);
+            columns.Add(category => category.Weight).Titled(@SharedLocalizer["Weight"]);
+            columns.Add(category => category.Quantity).Titled(@SharedLocalizer["Quantity"]);
+            columns.Add(category => category.Category.Name).Titled(@SharedLocalizer["Category"]);
+
+
+            columns.Add(category =>
+              Html.ActionLink(SharedLocalizer["Edit"].Value, "Edit", new { id = category.ID }, new { @class = "btn btn-primary" }));
+            columns.Add(category =>
+                Html.ActionLink(SharedLocalizer["Delete"].Value, "Delete", new { id = category.ID }, new { @class = "btn btn-primary" }));
+
+        })
+        .Filterable()
+        .Sortable()
+        )

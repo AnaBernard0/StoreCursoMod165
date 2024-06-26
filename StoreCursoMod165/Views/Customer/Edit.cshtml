@@ -1,8 +1,8 @@
 ﻿@model StoreCursoMod165.Models.Customer
 
-<h1>Edit</h1>
+<h1>@SharedLocalizer["Edit"]</h1>
 
-<h4>Customer</h4>
+<h4>@SharedLocalizer["Customer"]</h4>
 
 <hr />
 
@@ -13,7 +13,7 @@
             <partial name="Shared/_form" />
 
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value=@SharedLocalizer["Save"] class="btn btn-primary" />
             </div>
         </form>
     </div>

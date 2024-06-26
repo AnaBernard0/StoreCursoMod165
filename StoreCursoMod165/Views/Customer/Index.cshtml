@@ -2,7 +2,7 @@
 @model IEnumerable<StoreCursoMod165.Models.Customer>
 
 
-<h1>Customers</h1>
+<h1>@SharedLocalizer["Customers"]</h1>
 
 <p>
     <a asp-action="Create">@SharedLocalizer["Create New Customer"]</a>
@@ -13,19 +13,19 @@ Html
         .Grid(Model)
         .Build(columns =>
         {
-            columns.Add(customer => customer.Name).Titled("Name");
-            columns.Add(customer => customer.Email).Titled("E-mail");
-            columns.Add(customer => customer.Birthday).Titled("Birthday");
-            columns.Add(customer => customer.Address).Titled("Address");
-            columns.Add(customer => customer.City).Titled("City");
-            columns.Add(customer => customer.PostalCode).Titled("PostalCode");
-            columns.Add(customer => customer.NIF).Titled("Fiscal Number");
-            columns.Add(customer => customer.CustomerNumber).Titled("Custumer Number");
+            columns.Add(customer => customer.Name).Titled(@SharedLocalizer["Name"]);
+            columns.Add(customer => customer.Email).Titled(@SharedLocalizer["E-mail"]);
+            columns.Add(customer => customer.Birthday).Titled(@SharedLocalizer["Birthday"]);
+            columns.Add(customer => customer.Address).Titled(@SharedLocalizer["Address"]);
+            columns.Add(customer => customer.City).Titled(@SharedLocalizer["City"]);
+            columns.Add(customer => customer.PostalCode).Titled(@SharedLocalizer["PostalCode"]);
+            columns.Add(customer => customer.NIF).Titled(@SharedLocalizer["Fiscal Number"]);
+            columns.Add(customer => customer.CustomerNumber).Titled(@SharedLocalizer["Custumer Number"]);
 
 
             columns.Add(customer =>
-              Html.ActionLink("Edit", "Edit", new { id = customer.ID }, new { @class = "btn btn-primary" }));
-            columns.Add(customer => Html.ActionLink("Delete", "Delete", new { id = customer.ID }, new { @class = "btn btn-primary" }));
+              Html.ActionLink(SharedLocalizer["Edit"].Value, "Edit" , new { id = customer.ID }, new { @class = "btn btn-primary" }));
+            columns.Add(customer => Html.ActionLink(SharedLocalizer["Delete"].Value, "Delete", new { id = customer.ID }, new { @class = "btn btn-primary" }));
 
         })
         .Filterable()

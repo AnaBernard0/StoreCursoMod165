@@ -28,7 +28,7 @@ CultureInfo ptCI = new CultureInfo(defaultCulture);
 var supportedCultures = new[]
 {
     ptCI,
-    new CultureInfo("en-UK")
+    new CultureInfo("en")
 };
 
 builder.Services.Configure<RequestLocalizationOptions>(options =>

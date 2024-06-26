@@ -2,10 +2,10 @@
 @model IEnumerable<StoreCursoMod165.Models.Category>
 
 
-<h1>Categories</h1>
+<h1>@SharedLocalizer["Categories"]</h1>
 
 <p>
-    <a asp-action="Create">Create New Category</a>
+    <a asp-action="Create">@SharedLocalizer["Create New Category"]</a>
 </p>
 
 @(
@@ -13,14 +13,14 @@ Html
         .Grid(Model)
         .Build(columns =>
         {
-            columns.Add(category => category.Name).Titled("Name");
-            columns.Add(category => category.Description).Titled("Description");
+            columns.Add(category => category.Name).Titled(@SharedLocalizer["Name"]);
+            columns.Add(category => category.Description).Titled(@SharedLocalizer["Description"]);
 
 
             columns.Add(category =>
-              Html.ActionLink("Edit", "Edit", new { id = category.ID }, new { @class = "btn btn-primary" }));
+              Html.ActionLink(SharedLocalizer["Edit"].Value, "Edit", new { id = category.ID }, new { @class = "btn btn-primary" }));
             columns.Add(category =>
-                Html.ActionLink("Delete", "Delete", new { id = category.ID }, new { @class = "btn btn-primary" }));
+                Html.ActionLink(SharedLocalizer["Delete"].Value, "Delete", new { id = category.ID }, new { @class = "btn btn-primary" }));
 
         })
         .Filterable()

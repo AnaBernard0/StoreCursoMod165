@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using StoreCursoMod165.Data;
 using StoreCursoMod165.Models;
 
@@ -10,10 +12,16 @@ namespace StoreCursoMod165.Controllers
     public class OrderController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHtmlLocalizer<Resource> _sharedLocalizer;
+        private readonly IStringLocalizer<Resource> _localizer;
 
-        public OrderController(ApplicationDbContext context)
+        public OrderController(ApplicationDbContext context,
+                                IHtmlLocalizer<Resource> sharedLocalizer,
+                                    IStringLocalizer<Resource> localizer)
         {
             _context = context;
+            _sharedLocalizer = sharedLocalizer;
+            _localizer = localizer;
         }
         public IActionResult Index()
         {
@@ -192,6 +200,59 @@ namespace StoreCursoMod165.Controllers
         }
 
         [HttpGet]
+        public IActionResult EditOrdered(int id)
+        {
+            Order? order = _context.Orders
+                                           .Include(o => o.Product)
+                                           .Include(o => o.Customer)
+                                           .Include(o => o.Status)
+                                           .Where(o => o.ID == id)
+                                           .Single();
+
+
+            if (order == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            this.SetUpOrderModel();
+            return View(order);
+        }
+        [HttpPost]
+        public IActionResult EditOrdered(Order order)
+        {
+            order = _context.Orders
+                                          .Include(o => o.Product)
+                                          .Include(o => o.Customer)
+                                          .Include(o => o.Status)
+                                          .Where(o => o.ID == order.ID)
+                                          .Single();
+
+
+            if (order == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                //Muda estado da venda encomendado opara em processamento
+                if (order.StatusID == 1)
+                {
+                    order.StatusID=2;
+                    
+                }
+                else
+                    order.StatusID = 2;
+
+            }
+            //Guarda a encomenda como processada
+
+            _context.Orders.Update(order);
+            _context.SaveChanges();
+            this.SetUpOrderModel();
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
         public IActionResult InProgress()
         {
             var inprogress = _context.Orders
@@ -254,6 +315,7 @@ namespace StoreCursoMod165.Controllers
                 
             }
             //Guarda a encomenda como processada
+            _context.Orders.Update(order);
             _context.SaveChanges();
             this.SetUpOrderModel();
             return RedirectToAction(nameof(Index));
@@ -314,6 +376,7 @@ namespace StoreCursoMod165.Controllers
                 }
                 //ENVIA EMAIL AO CLIENTE FINAL
             }
+            _context.Orders.Update(order);
             _context.SaveChanges();
             this.SetUpOrderModel();
             return RedirectToAction(nameof(Index));

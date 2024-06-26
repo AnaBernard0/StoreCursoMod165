@@ -1,8 +1,8 @@
 ﻿@model StoreCursoMod165.Models.Order
 
-<h1>Delete</h1>
+<h1>@SharedLocalizer["Delete"]</h1>
 
-<h3 class="text-danger">Are you sure you want to delete this Order?</h3>
+<h3 class="text-danger">@SharedLocalizer["Are you sure you want to delete this Order?"]</h3>
 
 <hr />
 
@@ -13,8 +13,8 @@
             <partial name="Shared/_form" />
 
             <div class="form-group">
-                <input type="submit" value="Delete" class="btn btn-danger" />
-                <a asp-action="Index">Back to List</a>
+                <input type="submit" value=@SharedLocalizer["Delete"] class="btn btn-danger" />
+                <a asp-action="Index">@SharedLocalizer["Back to List"]</a>
             </div>
         </form>
     </div>

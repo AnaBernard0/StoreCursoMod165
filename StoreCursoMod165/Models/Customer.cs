@@ -7,6 +7,7 @@ namespace StoreCursoMod165.Models
         public int ID { get; set; }
 
         [StringLength(255)]
+        [Display(Name="Name")]
         [Required]
         public string Name { get; set; }
 
@@ -17,14 +18,16 @@ namespace StoreCursoMod165.Models
         public string Email { get; set; }
 
         [DataType(DataType.Date)]
+        [Display(Name="Birthday")]
         [Required]
         public DateOnly Birthday { get; set; }
+        [Display(Name="Address")]
         public string Address { get; set; }
-
+        [Display(Name="City")]
         public string City { get; set; }
 
         [StringLength(110)]
-        [Display(Name = "Postal Code")]
+        [Display(Name = "PostalCode")]
         public string PostalCode { get; set; }
 
         [StringLength(30)]

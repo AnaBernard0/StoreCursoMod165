@@ -10,33 +10,32 @@ Html
         .Grid(Model)
         .Build(columns =>
         {
-            columns.Add(order => order.Number).Titled("Order º");
-            columns.Add(order => order.Date).Titled("Date").Formatted("{0:dd-MMM-yyyy}")
+            columns.Add(order => order.Number).Titled(SharedLocalizer["Order º"]);
+        columns.Add(order => order.Date).Titled(SharedLocalizer["Date"]).Formatted("{0:dd-MMM-yyyy}")
                                                         .Filterable(GridFilterType.Double);
-            columns.Add(order => order.Time).Titled("Time").Formatted("{0:t}");
-            columns.Add(order => order.Customer.Name).Titled("Customer");
-            columns.Add(order => order.Product.Description).Titled("Product");
-            columns.Add(order => order.Informations).Titled("Informations");
-            columns.Add(order => order.Quantity).Titled("Quantity");
-            columns.Add(order => order.TotalValue).Titled("Total Value");
-            columns.Add(order => order.Status.NameofStatus).Titled("Status");
-            columns.Add(order => order.IsPaid).Titled("IsPaid")
-.RenderedAs(order => (order.IsPaid == true ? "Yes" : "No"))
-                  .UsingFilterOptions(new[]
-                  {
-                      new SelectListItem{Value="true",Text="Yes"},
-                      new SelectListItem{Value="false",Text="No"}
+            columns.Add(order => order.Time).Titled(SharedLocalizer["Time"]).Formatted("{0:t}");
+            columns.Add(order => order.Customer.Name).Titled(SharedLocalizer["Customer"]);
+            columns.Add(order => order.Product.Description).Titled(SharedLocalizer["Product"]);
+            columns.Add(order => order.Informations).Titled(SharedLocalizer["Informations"]);
+            columns.Add(order => order.Quantity).Titled(SharedLocalizer["Quantity"]);
+            columns.Add(order => order.TotalValue).Titled(SharedLocalizer["Total Value"]);
+            columns.Add(order => SharedLocalizer[order.Status.NameofStatus]).Titled(SharedLocalizer["Status"]);
+            columns.Add(ap => ap.IsPaid).Titled(SharedLocalizer["IsPaid"])
+           .RenderedAs(ap => (ap.IsPaid == true ? SharedLocalizer["Yes"] : SharedLocalizer["No"]))
+                   .UsingFilterOptions(new[]
+                   {
+                      new SelectListItem{Value="true",Text=SharedLocalizer["Yes"].Value},
+                      new SelectListItem{Value="false",Text=SharedLocalizer["No"].Value}
 
-                  });
+                   });
             columns.Add(order =>
-             Html.ActionLink("Edit", "EditProcessed", new { id = order.ID }, new { @class = "btn btn-primary" }));
-
+              Html.ActionLink(SharedLocalizer["Edit"].Value, "EditProcessed", new { id = order.ID }, new { @class = "btn btn-primary" }));
+            
         })
         .Filterable()
         .Sortable()
-        .Pageable()
-
-                  )@*
+        .Pageable())
+        @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
