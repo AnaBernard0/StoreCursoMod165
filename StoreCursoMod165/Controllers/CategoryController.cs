@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.Extensions.Localization;
+using NToastNotify;
 using StoreCursoMod165.Data;
 using StoreCursoMod165.Models;
 
@@ -8,10 +11,19 @@ namespace StoreCursoMod165.Controllers
     public class CategoryController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHtmlLocalizer<Resource> _sharedLocalizer;
+        private readonly IStringLocalizer<Resource> _localizer;
+        private readonly IToastNotification _toastNotification;
 
-        public CategoryController(ApplicationDbContext context)
+        public CategoryController(ApplicationDbContext context,
+                                IHtmlLocalizer<Resource> sharedLocalizer,
+                                    IStringLocalizer<Resource> localizer,
+                                    IToastNotification toastNotification)
         {
             _context = context;
+            _sharedLocalizer = sharedLocalizer;
+            _localizer = localizer;
+            _toastNotification = toastNotification;
         }
         public IActionResult Index()
         {
@@ -34,8 +46,19 @@ namespace StoreCursoMod165.Controllers
                 //Criar new category
                 _context.Category.Add(category);
                 _context.SaveChanges();
+                //Notification success
+                _toastNotification.AddSuccessToastMessage(_sharedLocalizer["Category successfully created!"].Value);
+
                 return RedirectToAction("Index");
             }
+            //notification error
+            _toastNotification.AddErrorToastMessage(_sharedLocalizer["Check the category again!"].Value,
+               new ToastrOptions
+               {
+                   Title = _sharedLocalizer["Category Creation error!"].Value,
+                   TapToDismiss = true,
+                   TimeOut = 0
+               });
 
             return View(category);
         }
@@ -68,8 +91,18 @@ namespace StoreCursoMod165.Controllers
             {
                 _context.Category.Update(category);
                 _context.SaveChanges();
+                //Notification success
+                _toastNotification.AddSuccessToastMessage(_sharedLocalizer["Category successfully edited!"].Value);
                 return RedirectToAction(nameof(Index));
             }
+            //notification error
+            _toastNotification.AddErrorToastMessage(_sharedLocalizer["Check the category again!"].Value,
+               new ToastrOptions
+               {
+                   Title = _sharedLocalizer["Category Edition error!"].Value,
+                   TapToDismiss = true,
+                   TimeOut = 0
+               });
             return View(category);
         }
 
@@ -100,8 +133,18 @@ namespace StoreCursoMod165.Controllers
             {
                 _context.Category.Remove(category);
                 _context.SaveChanges();
+                //Notification success
+                _toastNotification.AddSuccessToastMessage(_sharedLocalizer["Category successfully deleted!"].Value);
                 return RedirectToAction(nameof(Index));
             }
+            //notification error
+            _toastNotification.AddErrorToastMessage(_sharedLocalizer["Check the category again!"].Value,
+               new ToastrOptions
+               {
+                   Title = _sharedLocalizer["Category Deletion error!"].Value,
+                   TapToDismiss = true,
+                   TimeOut = 0
+               });
             return View(category);
         }
     }

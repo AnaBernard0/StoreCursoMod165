@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
+using NToastNotify;
 using StoreCursoMod165.Data;
 using StoreCursoMod165.Models;
 
@@ -14,14 +15,17 @@ namespace StoreCursoMod165.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IHtmlLocalizer<Resource> _sharedLocalizer;
         private readonly IStringLocalizer<Resource> _localizer;
+        private readonly IToastNotification _toastNotification;
 
         public OrderController(ApplicationDbContext context,
                                 IHtmlLocalizer<Resource> sharedLocalizer,
-                                    IStringLocalizer<Resource> localizer)
+                                    IStringLocalizer<Resource> localizer,
+                                    IToastNotification toastNotification)
         {
             _context = context;
             _sharedLocalizer = sharedLocalizer;
             _localizer = localizer;
+            _toastNotification = toastNotification;
         }
         public IActionResult Index()
         {
@@ -31,9 +35,9 @@ namespace StoreCursoMod165.Controllers
             IEnumerable<Order> orders = _context.Orders
                                                     .Include(o => o.Product)
                                                     .Include(o => o.Customer)
-                                                    .Include(o=>o.Status)
+                                                    .Include(o => o.Status)
                                                     .ToList();
-            foreach(var order in orders)
+            foreach (var order in orders)
             {
                 order.TotalValue = Decimal.Parse(order.Quantity) * (order.Product.Price);
             }
@@ -57,22 +61,32 @@ namespace StoreCursoMod165.Controllers
                 var products = _context.Products.ToList();
                 decimal price = 0;
                 //Calcula o preco da venda de acordo com os produtos seliconados
-                foreach(var xy in products)
+                foreach (var xy in products)
                 {
-                    if(xy.ID==order.ProductID)
-                        price=xy.Price;
+                    if (xy.ID == order.ProductID)
+                        price = xy.Price;
                 }
-               
+
                 //Criar new category
                 order.TotalValue = Decimal.Parse(order.Quantity) * (price);
                 _context.Orders.Add(order);
-                
-               // 
+
+
                 _context.SaveChanges();
-               
+                //Notification success
+                _toastNotification.AddSuccessToastMessage(_sharedLocalizer["Order successfully created!"].Value);
 
                 return RedirectToAction("Index");
             }
+
+            //notification error
+            _toastNotification.AddErrorToastMessage(_sharedLocalizer["Check the order again!"].Value,
+               new ToastrOptions
+               {
+                   Title = _sharedLocalizer["Order Creation error!"].Value,
+                   TapToDismiss = true,
+                   TimeOut = 0
+               });
             this.SetUpOrderModel();
             //order.TotalValue = Decimal.Parse(order.Quantity) * (order.Product.Price);
             return View(order);
@@ -104,7 +118,7 @@ namespace StoreCursoMod165.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
-            this.SetUpOrderModel();            
+            this.SetUpOrderModel();
             return View(order);
         }
 
@@ -112,13 +126,27 @@ namespace StoreCursoMod165.Controllers
         [HttpPost]
         public IActionResult Edit(Order order)
         {
-           
+
             if (ModelState.IsValid)
             {
                 _context.Orders.Update(order);
                 _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
+
+                //Notification success
+                _toastNotification.AddSuccessToastMessage(_sharedLocalizer["Order successfully edited!"].Value);
+
+                return RedirectToAction("Index");
             }
+
+            //notification error
+            _toastNotification.AddErrorToastMessage(_sharedLocalizer["Check the order again!"].Value,
+               new ToastrOptions
+               {
+                   Title = _sharedLocalizer["Order Edition error!"].Value,
+                   TapToDismiss = true,
+                   TimeOut = 0
+               });
+            this.SetUpOrderModel();
             return View(order);
         }
 
@@ -149,9 +177,21 @@ namespace StoreCursoMod165.Controllers
             if (order != null)
             {
                 _context.Orders.Remove(order);
-                _context.SaveChanges();
+                //Notification success
+                _toastNotification.AddSuccessToastMessage(_sharedLocalizer["Order successfully deleted!"].Value);
+
                 return RedirectToAction(nameof(Index));
             }
+
+            //notification error
+            _toastNotification.AddErrorToastMessage(_sharedLocalizer["Check the order again!"].Value,
+               new ToastrOptions
+               {
+                   Title = _sharedLocalizer["Order Deletion error!"].Value,
+                   TapToDismiss = true,
+                   TimeOut = 0
+               });
+            this.SetUpOrderModel();
             return View(order);
         }
 
@@ -192,10 +232,10 @@ namespace StoreCursoMod165.Controllers
                                                .Include(o => o.Product)
                                                .Include(o => o.Status)
                                                .Include(o => o.Customer)
-                                               .Where(o=>o.StatusID == 1)
+                                               .Where(o => o.StatusID == 1)
                                                .ToList();
             this.SetUpOrderModel();
-          
+
             return View(seeOrdered);
         }
 
@@ -228,8 +268,16 @@ namespace StoreCursoMod165.Controllers
                                           .Single();
 
 
-            if (order == null)
+            if (order == null || !ModelState.IsValid)
             {
+                //error edition 
+                _toastNotification.AddErrorToastMessage(_sharedLocalizer["Check the order again!"].Value,
+               new ToastrOptions
+               {
+                   Title = _sharedLocalizer["Order Edition error!"].Value,
+                   TapToDismiss = true,
+                   TimeOut = 0
+               });
                 return RedirectToAction(nameof(Index));
             }
             else
@@ -237,8 +285,8 @@ namespace StoreCursoMod165.Controllers
                 //Muda estado da venda encomendado opara em processamento
                 if (order.StatusID == 1)
                 {
-                    order.StatusID=2;
-                    
+                    order.StatusID = 2;
+
                 }
                 else
                     order.StatusID = 2;
@@ -248,6 +296,12 @@ namespace StoreCursoMod165.Controllers
 
             _context.Orders.Update(order);
             _context.SaveChanges();
+
+            //Notification success
+            _toastNotification.AddSuccessToastMessage(_sharedLocalizer["Order edited to In Progress!"].Value);
+
+
+
             this.SetUpOrderModel();
             return RedirectToAction(nameof(Index));
         }
@@ -262,7 +316,7 @@ namespace StoreCursoMod165.Controllers
                                                .Where(o => o.StatusID == 2)
                                                .ToList();
 
-            
+
             this.SetUpOrderModel();
 
             return View(inprogress);
@@ -289,34 +343,46 @@ namespace StoreCursoMod165.Controllers
         [HttpPost]
         public IActionResult EditInProgress(Order order)
         {
-             order = _context.Orders
-                                           .Include(o => o.Product)
-                                           .Include(o => o.Customer)
-                                           .Include(o => o.Status)
-                                           .Where(o => o.ID==order.ID)
-                                           .Single();
+            order = _context.Orders
+                                          .Include(o => o.Product)
+                                          .Include(o => o.Customer)
+                                          .Include(o => o.Status)
+                                          .Where(o => o.ID == order.ID)
+                                          .Single();
 
 
-            if (order == null)
+            if (order == null || !ModelState.IsValid)
             {
+                //error edition 
+                _toastNotification.AddErrorToastMessage(_sharedLocalizer["Check the order again!"].Value,
+               new ToastrOptions
+               {
+                   Title = _sharedLocalizer["Order Edition error!"].Value,
+                   TapToDismiss = true,
+                   TimeOut = 0
+               });
                 return RedirectToAction(nameof(Index));
             }
-            else 
+            else
             {
-                    //Verifica a existencia do produto, se nao existir abate o preco para 0 
-                    if (order.StatusID == 2 && ((Convert.ToInt32(order.Product.Quantity)) - (Convert.ToInt32(order.Quantity)) < 0))
-                    {
-                        order.Informations = "There is no more " + order.Product.Description;
-                        order.TotalValue = 0;
+                //Verifica a existencia do produto, se nao existir abate o preco para 0 
+                if (order.StatusID == 2 && ((Convert.ToInt32(order.Product.Quantity)) - (Convert.ToInt32(order.Quantity)) < 0))
+                {
+                    order.Informations = "There is no more " + order.Product.Description;
+                    _toastNotification.AddWarningToastMessage("There is no more " + order.Product.Description);
+                    order.TotalValue = 0;
 
-                    }    
-                    else
-                       order.StatusID = 3;
-                
+                }
+                else
+                    order.StatusID = 3;
+
             }
             //Guarda a encomenda como processada
             _context.Orders.Update(order);
             _context.SaveChanges();
+            //Notification success
+            _toastNotification.AddSuccessToastMessage("Order edited to Processed!");
+
             this.SetUpOrderModel();
             return RedirectToAction(nameof(Index));
         }
@@ -357,8 +423,16 @@ namespace StoreCursoMod165.Controllers
         public IActionResult EditProcessed(Order order)
         {
 
-            if (order == null)
+            if (order == null || !ModelState.IsValid)
             {
+                //error edition 
+                _toastNotification.AddErrorToastMessage(_sharedLocalizer["Check the order again!"].Value,
+               new ToastrOptions
+               {
+                   Title = _sharedLocalizer["Order Edition error!"].Value,
+                   TapToDismiss = true,
+                   TimeOut = 0
+               });
                 return RedirectToAction(nameof(Index));
             }
             else
@@ -378,6 +452,8 @@ namespace StoreCursoMod165.Controllers
             }
             _context.Orders.Update(order);
             _context.SaveChanges();
+            _toastNotification.AddSuccessToastMessage(_sharedLocalizer["Order edited to Sent!"].Value);
+
             this.SetUpOrderModel();
             return RedirectToAction(nameof(Index));
         }
@@ -402,7 +478,6 @@ namespace StoreCursoMod165.Controllers
             ViewBag.ProductList = new SelectList(_context.Products, "ID", "Description");
             ViewBag.CustomerList = new SelectList(_context.Customers, "ID", "Name");
             ViewBag.Status = new SelectList(_context.OrderStatus, "ID", "NameofStatus");
-
         }
     }
 }

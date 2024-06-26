@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using NToastNotify;
 using StoreCursoMod165;
 using StoreCursoMod165.Data;
 using System.Globalization;
@@ -47,6 +48,20 @@ builder.Services
         });
 
 
+//Notification
+builder.Services
+    .AddMvc()
+    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+    .AddDataAnnotationsLocalization(options =>
+    {
+        options.DataAnnotationLocalizerProvider = (type, factory) => factory.Create(typeof(Resource));
+    })
+    .AddNToastNotifyToastr(new ToastrOptions()
+    {
+        ProgressBar = true,
+        PositionClass = ToastPositions.TopRight
+    });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -73,6 +88,8 @@ app.UseRequestLocalization(
     app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value
 
 );
+
+app.UseNToastNotify();
 
 app.MapControllerRoute(
     name: "default",

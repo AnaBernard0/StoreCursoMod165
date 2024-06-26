@@ -147,6 +147,33 @@
   <data name="Category" xml:space="preserve">
     <value>Categoria</value>
   </data>
+  <data name="Category Creation error!" xml:space="preserve">
+    <value>Erro na criação da categoria!</value>
+  </data>
+  <data name="Category Deletion error!" xml:space="preserve">
+    <value>Erro a apagar a categoria!</value>
+  </data>
+  <data name="Category Edition error!" xml:space="preserve">
+    <value>Erro na edição da categoria!</value>
+  </data>
+  <data name="Category successfully created!" xml:space="preserve">
+    <value>Categoria criada com sucesso!</value>
+  </data>
+  <data name="Category successfully deleted!" xml:space="preserve">
+    <value>Categoria apagada com sucesso!</value>
+  </data>
+  <data name="Check the category again!" xml:space="preserve">
+    <value>Verifique a categoria novamente!</value>
+  </data>
+  <data name="Check the customer again!" xml:space="preserve">
+    <value>Verifique o cliente novamente!</value>
+  </data>
+  <data name="Check the order again!" xml:space="preserve">
+    <value>Verifique a venda novamente!</value>
+  </data>
+  <data name="Check the product again!" xml:space="preserve">
+    <value>Verifique o produto novamente!</value>
+  </data>
   <data name="City" xml:space="preserve">
     <value>Cidade</value>
   </data>
@@ -168,8 +195,20 @@
   <data name="Customer" xml:space="preserve">
     <value>Cliente</value>
   </data>
+  <data name="Customer Creation error!" xml:space="preserve">
+    <value>Erro ao criar o cliente!</value>
+  </data>
   <data name="Customer Number" xml:space="preserve">
     <value>Número de Cliente</value>
+  </data>
+  <data name="Customer successfully created!" xml:space="preserve">
+    <value>Cliente criado com sucesso!</value>
+  </data>
+  <data name="Customer successfully deleted!" xml:space="preserve">
+    <value>Cliente eliminado com sucesso!</value>
+  </data>
+  <data name="Customer successfully edited!" xml:space="preserve">
+    <value>Cliente editado com sucesso!</value>
   </data>
   <data name="Customers" xml:space="preserve">
     <value>Clientes</value>
@@ -228,11 +267,32 @@
   <data name="Order" xml:space="preserve">
     <value>Venda</value>
   </data>
+  <data name="Order Creation error!" xml:space="preserve">
+    <value>Erro na criação da venda!</value>
+  </data>
+  <data name="Order edited to In Progress!" xml:space="preserve">
+    <value>Venda editada para o Estado Em Progresso!</value>
+  </data>
+  <data name="Order edited to Sent!" xml:space="preserve">
+    <value>Venda editada para o Estado Enviado!</value>
+  </data>
+  <data name="Order Edition error!" xml:space="preserve">
+    <value>Erro de edição de Venda!</value>
+  </data>
   <data name="Order In Progress -&gt; To Processed" xml:space="preserve">
     <value>Venda Em progresso -&gt; Para Processada</value>
   </data>
   <data name="Order Processed -&gt; To Sent" xml:space="preserve">
     <value>Venda Processada -&gt; Para Enviada</value>
+  </data>
+  <data name="Order successfully created!" xml:space="preserve">
+    <value>Venda criada com sucesso!</value>
+  </data>
+  <data name="Order successfully deleted!" xml:space="preserve">
+    <value>Venda eliminada com sucesso!</value>
+  </data>
+  <data name="Order successfully edited!" xml:space="preserve">
+    <value>Venda editada com sucesso!</value>
   </data>
   <data name="Ordered" xml:space="preserve">
     <value>Encomendada</value>
@@ -257,6 +317,24 @@
   </data>
   <data name="Product" xml:space="preserve">
     <value>Produto</value>
+  </data>
+  <data name="Product Creation error!" xml:space="preserve">
+    <value>Erro na criação do produto!</value>
+  </data>
+  <data name="Product Deletion error!" xml:space="preserve">
+    <value>Erro ao apagar produto!</value>
+  </data>
+  <data name="Product Edition error!" xml:space="preserve">
+    <value>Erro na edição do produto!</value>
+  </data>
+  <data name="Product successfully created!" xml:space="preserve">
+    <value>Produto criado com sucesso!</value>
+  </data>
+  <data name="Product successfully deleted!" xml:space="preserve">
+    <value>Produto eleminado com sucesso!</value>
+  </data>
+  <data name="Product successfully edited!" xml:space="preserve">
+    <value>Produto editado com sucesso!</value>
   </data>
   <data name="Products" xml:space="preserve">
     <value>Produtos</value>
