@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Options;
 using NToastNotify;
 using StoreCursoMod165;
 using StoreCursoMod165.Data;
+using StoreCursoMod165.Services;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -61,6 +63,8 @@ builder.Services
         ProgressBar = true,
         PositionClass = ToastPositions.TopRight
     });
+builder.Services
+    .AddTransient<IEmailSender, EmailSender>(); // para envio de emails
 
 var app = builder.Build();
 

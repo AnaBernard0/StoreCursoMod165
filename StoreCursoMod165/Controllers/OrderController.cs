@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Localization;
 using NToastNotify;
 using StoreCursoMod165.Data;
 using StoreCursoMod165.Models;
+using System.Text;
 
 namespace StoreCursoMod165.Controllers
 {
@@ -16,16 +18,19 @@ namespace StoreCursoMod165.Controllers
         private readonly IHtmlLocalizer<Resource> _sharedLocalizer;
         private readonly IStringLocalizer<Resource> _localizer;
         private readonly IToastNotification _toastNotification;
+        private readonly IEmailSender _emailSender;
 
         public OrderController(ApplicationDbContext context,
                                 IHtmlLocalizer<Resource> sharedLocalizer,
                                     IStringLocalizer<Resource> localizer,
-                                    IToastNotification toastNotification)
+                                    IToastNotification toastNotification,
+                                    IEmailSender emailSender)
         {
             _context = context;
             _sharedLocalizer = sharedLocalizer;
             _localizer = localizer;
             _toastNotification = toastNotification;
+            _emailSender = emailSender;
         }
         public IActionResult Index()
         {
@@ -69,6 +74,7 @@ namespace StoreCursoMod165.Controllers
 
                 //Criar new category
                 order.TotalValue = Decimal.Parse(order.Quantity) * (price);
+                order.StatusID = 1;
                 _context.Orders.Add(order);
 
 
@@ -106,6 +112,9 @@ namespace StoreCursoMod165.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
+            //Customer? customer = _context.Customers.Find(order.CustomerID);
+            //Product? product = _context.Products.Find(order.ProductID);
+            //Status? status = _context.OrderStatus.Find(order.StatusID);
             Order? order = _context.Orders
                                            .Include(o => o.Product)
                                            .Include(o => o.Customer)
@@ -260,12 +269,9 @@ namespace StoreCursoMod165.Controllers
         [HttpPost]
         public IActionResult EditOrdered(Order order)
         {
-            order = _context.Orders
-                                          .Include(o => o.Product)
-                                          .Include(o => o.Customer)
-                                          .Include(o => o.Status)
-                                          .Where(o => o.ID == order.ID)
-                                          .Single();
+            Customer? customer = _context.Customers.Find(order.CustomerID);
+            Product? product = _context.Products.Find(order.ProductID);
+            Status? status = _context.OrderStatus.Find(order.StatusID);
 
 
             if (order == null || !ModelState.IsValid)
@@ -343,15 +349,12 @@ namespace StoreCursoMod165.Controllers
         [HttpPost]
         public IActionResult EditInProgress(Order order)
         {
-            order = _context.Orders
-                                          .Include(o => o.Product)
-                                          .Include(o => o.Customer)
-                                          .Include(o => o.Status)
-                                          .Where(o => o.ID == order.ID)
-                                          .Single();
+            Customer? customer = _context.Customers.Find(order.CustomerID);
+            Product? product = _context.Products.Find(order.ProductID);
+            Status? status = _context.OrderStatus.Find(order.StatusID);
 
 
-            if (order == null || !ModelState.IsValid)
+            if (order == null || !ModelState.IsValid || product == null || status == null || customer == null)
             {
                 //error edition 
                 _toastNotification.AddErrorToastMessage(_sharedLocalizer["Check the order again!"].Value,
@@ -366,7 +369,7 @@ namespace StoreCursoMod165.Controllers
             else
             {
                 //Verifica a existencia do produto, se nao existir abate o preco para 0 
-                if (order.StatusID == 2 && ((Convert.ToInt32(order.Product.Quantity)) - (Convert.ToInt32(order.Quantity)) < 0))
+                if (order.StatusID == 2 && ((Convert.ToInt32(product.Quantity)) - (Convert.ToInt32(order.Quantity)) < 0))
                 {
                     order.Informations = "There is no more " + order.Product.Description;
                     _toastNotification.AddWarningToastMessage("There is no more " + order.Product.Description);
@@ -422,8 +425,11 @@ namespace StoreCursoMod165.Controllers
         [HttpPost]
         public IActionResult EditProcessed(Order order)
         {
+            Customer? customer = _context.Customers.Find(order.CustomerID);
+            Product? product = _context.Products.Find(order.ProductID);
+            Status? status = _context.OrderStatus.Find(order.StatusID);
 
-            if (order == null || !ModelState.IsValid)
+            if (order == null || !ModelState.IsValid || product == null || status == null || customer == null)
             {
                 //error edition 
                 _toastNotification.AddErrorToastMessage(_sharedLocalizer["Check the order again!"].Value,
@@ -440,19 +446,39 @@ namespace StoreCursoMod165.Controllers
                 //Atualiza stocks dos produtos
                 if (order.StatusID == 3)
                 {
-                    order = _context.Orders
-                                                   .Include(o => o.Product)
-                                                   .Include(o => o.Customer)
-                                                   .Where(o => o.ID == order.ID)
-                                                   .Single();
+                    
                     order.Product.Quantity = Convert.ToString(Convert.ToInt32(order.Product.Quantity) - Convert.ToInt32(order.Quantity));
                     order.StatusID = 4;
                 }
                 //ENVIA EMAIL AO CLIENTE FINAL
+               
+                if (customer == null)
+                {
+                    return NotFound();
+                }
+                var culture = Thread.CurrentThread.CurrentCulture;
+
+                string template = System.IO.File.ReadAllText(
+                    Path.Combine(
+                            Directory.GetCurrentDirectory(),
+                            "EmailTemplates",
+                            $"sent_order.{culture.Name}.html"));
+
+                StringBuilder htmlBody = new StringBuilder(template);
+                htmlBody.Replace("##CUSTOMER_NAME##", customer.Name);
+                htmlBody.Replace("##ORDER_DATE##", order.Date.ToShortDateString());
+                htmlBody.Replace("##ORDER_TIME##", order.Time.ToShortTimeString());
+                htmlBody.Replace("##ORDER_QUANTITY##", order.Quantity);
+                htmlBody.Replace("##PRODUCT_DESCRIPTION##", product.Description);
+                htmlBody.Replace("##TOTAL_VALUE##", order.TotalValue.ToString());
+
+
+
+                _emailSender.SendEmailAsync(customer.Email, "Order Sent", htmlBody.ToString());
             }
             _context.Orders.Update(order);
             _context.SaveChanges();
-            _toastNotification.AddSuccessToastMessage(_sharedLocalizer["Order edited to Sent!"].Value);
+            _toastNotification.AddSuccessToastMessage(_sharedLocalizer["Order Sent!"].Value);
 
             this.SetUpOrderModel();
             return RedirectToAction(nameof(Index));

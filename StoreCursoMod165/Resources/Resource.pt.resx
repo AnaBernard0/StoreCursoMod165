@@ -273,9 +273,6 @@
   <data name="Order edited to In Progress!" xml:space="preserve">
     <value>Venda editada para o Estado Em Progresso!</value>
   </data>
-  <data name="Order edited to Sent!" xml:space="preserve">
-    <value>Venda editada para o Estado Enviado!</value>
-  </data>
   <data name="Order Edition error!" xml:space="preserve">
     <value>Erro de edição de Venda!</value>
   </data>
@@ -284,6 +281,9 @@
   </data>
   <data name="Order Processed -&gt; To Sent" xml:space="preserve">
     <value>Venda Processada -&gt; Para Enviada</value>
+  </data>
+  <data name="Order Sent!" xml:space="preserve">
+    <value>Venda Enviada!</value>
   </data>
   <data name="Order successfully created!" xml:space="preserve">
     <value>Venda criada com sucesso!</value>
