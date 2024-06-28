@@ -12,6 +12,7 @@ using System.Text;
 
 namespace StoreCursoMod165.Controllers
 {
+    [Authorize]
     public class OrderController : Controller
     {
         private readonly ApplicationDbContext _context;

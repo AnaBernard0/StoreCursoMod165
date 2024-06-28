@@ -10,6 +10,7 @@ using StoreCursoMod165.Models;
 
 namespace StoreCursoMod165.Controllers
 {
+    [Authorize]
     public class CustomerController : Controller
     {
         private readonly ApplicationDbContext _context;

@@ -8,6 +8,7 @@ using StoreCursoMod165.Models;
 
 namespace StoreCursoMod165.Controllers
 {
+    [Authorize]
     public class CategoryController : Controller
     {
         private readonly ApplicationDbContext _context;
