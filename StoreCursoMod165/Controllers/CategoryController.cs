@@ -5,10 +5,12 @@ using Microsoft.Extensions.Localization;
 using NToastNotify;
 using StoreCursoMod165.Data;
 using StoreCursoMod165.Models;
+using static StoreCursoMod165.StoreCursoMod165Constants;
 
 namespace StoreCursoMod165.Controllers
 {
-    [Authorize]
+    [Authorize]//(Policy = POLICIES.APP_POLICY_ADMIN.NAME)]
+
     public class CategoryController : Controller
     {
         private readonly ApplicationDbContext _context;

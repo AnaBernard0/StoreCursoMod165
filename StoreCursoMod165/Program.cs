@@ -7,8 +7,10 @@ using Microsoft.Extensions.Options;
 using NToastNotify;
 using StoreCursoMod165;
 using StoreCursoMod165.Data;
+using StoreCursoMod165.Data.SeedDatabase;
 using StoreCursoMod165.Services;
 using System.Globalization;
+using static StoreCursoMod165.StoreCursoMod165Constants;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,7 +37,12 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     .AddEntityFrameworkStores<ApplicationDbContext>();
 //builder.Services.AddControllersWithViews();
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(POLICIES.APP_POLICY_VENDEDORES.NAME, policy => policy.RequireRole(POLICIES.APP_POLICY_VENDEDORES.APP_POLICY_ROLES));
+    options.AddPolicy(POLICIES.APP_POLICY_ADMIN.NAME, policy => policy.RequireRole(POLICIES.APP_POLICY_ADMIN.APP_POLICY_ROLES));
 
+});
 
 //Add Translations
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
@@ -125,5 +132,5 @@ void SeedDB()
     var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-    //SeedDatabase.Seed(dbContext, userManager, roleManager);
+    SeedDatabase.Seed(dbContext, userManager, roleManager);
 }
