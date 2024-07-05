@@ -1,7 +1,6 @@
 ﻿@*using Microsoft.AspNetCore.Authorization*@
 @model IEnumerable<StoreCursoMod165.Models.Order>
-<h1>@SharedLocalizer["In Progress"]</h1>
-
+<h1>@SharedLocalizer["Ordered"]</h1>
 
 @(
 Html
@@ -27,15 +26,11 @@ Html
 
                    });
             columns.Add(order =>
-       Html.ActionLink(SharedLocalizer["Edit"].Value, "EditInProgress", new { id = order.ID }, new { @class = "btn btn-primary" }));
-
+              Html.ActionLink(SharedLocalizer["Edit"].Value, "EditOrdered", new { id = order.ID }, new { @class = "btn btn-primary" }));
+            columns.Add(order =>
+              Html.ActionLink(SharedLocalizer["Delete"].Value, "Delete", new { id = order.ID }, new { @class = "btn btn-primary" }));
         })
         .Filterable()
         .Sortable()
-        .Pageable() 
-
-                  )@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+        .Pageable()
+                  )

@@ -236,6 +236,19 @@ namespace StoreCursoMod165.Controllers
         }
 
         [HttpGet]
+        public IActionResult OrderedProfile()
+        {
+            var seeOrdered = _context.Orders
+                                               .Include(o => o.Product)
+                                               .Include(o => o.Status)
+                                               .Include(o => o.Customer)
+                                               .Where(o => o.StatusID == 1)
+                                               .ToList();
+            this.SetUpOrderModel();
+
+            return View(seeOrdered);
+        }
+        [HttpGet]
         public IActionResult Ordered()
         {
             var seeOrdered = _context.Orders
