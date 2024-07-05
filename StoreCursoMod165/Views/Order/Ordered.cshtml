@@ -1,9 +1,9 @@
 ﻿@*using Microsoft.AspNetCore.Authorization*@
 @model IEnumerable<StoreCursoMod165.Models.Order>
-<h1>Ordered</h1>
+<h1>@SharedLocalizer["Ordered"]</h1>
 
 <p>
-    <a asp-action="Index" class="btn btn-primary">Back to All Orders</a>
+    <a asp-action="Index" class="btn btn-primary">@SharedLocalizer["Back to All Orders"]</a>
 </p>
 @(
 Html

@@ -8,7 +8,7 @@
             public readonly struct ADMINISTRADOR
             {
                 public static readonly string USERNAME = "administrador";
-                public static readonly string PASSWORD = "xpto1234";
+                public static readonly string PASSWORD = "12345678";
             }
 
             public readonly struct VENDEDOR
@@ -22,7 +22,6 @@
                 public static readonly string USERNAME = "logistica";
                 public static readonly string PASSWORD = "20034065";
             }
-
         }
 
         public readonly struct ROLES
@@ -31,6 +30,8 @@
             public static readonly string ADMINISTRADOR = "ADMINISTRADOR";
             public static readonly string VENDEDOR = "VENDEDOR";
             public static readonly string LOGISTICA = "LOGISTICA";
+           
+
 
         }
 
@@ -43,14 +44,25 @@
                 public static readonly string[] APP_POLICY_ROLES =
                 {
 
-                    ROLES.ADMINISTRADOR,
+                   
                     ROLES.VENDEDOR,
                 };
             }
 
-            public readonly struct APP_POLICY_ADMIN
+            public readonly struct APP_POLICY_LOGISTICA
             {
-                public const string NAME = "APP_POLICY_ADMIN";
+                public const string NAME = "APP_POLICY_LOGISTICA";
+                public static readonly string[] APP_POLICY_ROLES =
+                {
+
+                   
+                    ROLES.LOGISTICA,
+                };
+            }
+
+            public readonly struct APP_POLICY_ADMINISTRADOR
+            {
+                public const string NAME = "APP_POLICY_ADMINISTRADOR";
                 public static readonly string[] APP_POLICY_ROLES =
                 {
                     ROLES.ADMINISTRADOR,

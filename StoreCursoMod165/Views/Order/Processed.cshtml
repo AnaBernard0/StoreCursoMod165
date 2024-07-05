@@ -1,10 +1,7 @@
 ﻿@*using Microsoft.AspNetCore.Authorization*@
 @model IEnumerable<StoreCursoMod165.Models.Order>
-<h1>Processeed</h1>
+<h1>@SharedLocalizer["Processed"]</h1>
 
-<p>
-    <a asp-action="Index" class="btn btn-primary">Back to All Orders</a>
-</p>
 @(
 Html
         .Grid(Model)

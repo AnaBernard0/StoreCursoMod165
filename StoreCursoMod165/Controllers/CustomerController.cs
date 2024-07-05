@@ -11,7 +11,7 @@ using static StoreCursoMod165.StoreCursoMod165Constants;
 
 namespace StoreCursoMod165.Controllers
 {
-    [Authorize]//(Policy = POLICIES.APP_POLICY_ADMIN.NAME)]
+    [Authorize]
 
     public class CustomerController : Controller
     {

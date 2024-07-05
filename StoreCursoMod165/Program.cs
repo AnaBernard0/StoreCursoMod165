@@ -11,6 +11,7 @@ using StoreCursoMod165.Data.SeedDatabase;
 using StoreCursoMod165.Services;
 using System.Globalization;
 using static StoreCursoMod165.StoreCursoMod165Constants;
+using static StoreCursoMod165.StoreCursoMod165Constants.POLICIES;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,7 +41,8 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy(POLICIES.APP_POLICY_VENDEDORES.NAME, policy => policy.RequireRole(POLICIES.APP_POLICY_VENDEDORES.APP_POLICY_ROLES));
-    options.AddPolicy(POLICIES.APP_POLICY_ADMIN.NAME, policy => policy.RequireRole(POLICIES.APP_POLICY_ADMIN.APP_POLICY_ROLES));
+    options.AddPolicy(POLICIES.APP_POLICY_LOGISTICA.NAME, policy => policy.RequireRole(POLICIES.APP_POLICY_LOGISTICA.APP_POLICY_ROLES));
+    options.AddPolicy(POLICIES.APP_POLICY_ADMINISTRADOR.NAME, policy => policy.RequireRole(POLICIES.APP_POLICY_ADMINISTRADOR.APP_POLICY_ROLES));
 
 });
 
@@ -122,7 +124,10 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
+SeedDB();
 app.Run();
+
+
 
 void SeedDB()
 { 

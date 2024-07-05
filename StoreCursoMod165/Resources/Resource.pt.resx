@@ -303,6 +303,15 @@
   <data name="Orders" xml:space="preserve">
     <value>Vendas</value>
   </data>
+  <data name="Orders In Progress" xml:space="preserve">
+    <value>Vendas Em Progresso</value>
+  </data>
+  <data name="Orders Ordered" xml:space="preserve">
+    <value>Vendas Encomendadas</value>
+  </data>
+  <data name="Orders Processed" xml:space="preserve">
+    <value>Vendas Processadas</value>
+  </data>
   <data name="PostalCode" xml:space="preserve">
     <value>Código Postal</value>
   </data>
